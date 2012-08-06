@@ -14,6 +14,7 @@
 #' @author Yihui Xie <\url{http://yihui.name}>
 #' @seealso \code{\link[R2WinBUGS]{bugs}}
 #' @keywords misc
+#' @export
 #' @examples
 #' 
 #' \dontrun{
