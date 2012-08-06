@@ -14,6 +14,8 @@ LazyLoad: yes
 Depends:
     R2WinBUGS,
     gWidgetsRGtk2
+Suggests:
+    knitr
 Collate:
     'bugs.options.R'
     'iBUGS.R'
