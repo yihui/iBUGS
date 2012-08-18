@@ -30,35 +30,33 @@
 #' }
 #' 
 bugs.options <- function(...) {
-    if (is.null(getOption("iBUGS"))) {
+    program0 = ifelse(is.null(getOption("iBUGS")$program), "JAGS", getOption("iBUGS")$program)
+    if (is.null(getOption("iBUGS")) || program != program0) {
         bugs.directory = ""
-        program = ""
-        ## looking for (Win|Open)BUGS
+        ## looking for (Win|Open)BUGS|JAGS
         if (.Platform$OS.type == "windows") {
-            if (nzchar(prog <- Sys.getenv("ProgramFiles")) &&
-                length(bugs.dir <- list.files(prog, "^(Open|Win)BUGS.*")) &&
-                length(bugs.exe <- dirname(list.files(file.path(prog,
-                  bugs.dir), pattern = "(Open|Win)BUGS.*\\.exe$",
-                  full.names = TRUE, recursive = TRUE)))) {
-                ## if I can find OpenBUGS, use it prior to WinBUGS
-                program = ifelse(length(grep("OpenBUGS", bugs.exe)),
-                  "OpenBUGS", "WinBUGS")
-                ## ignore multiple directories if BUGS installed in multiple places
-                bugs.directory = bugs.exe[grep(program, bugs.exe)][1]
-            }
+            if (nzchar(prog <- Sys.getenv("ProgramFiles")) && length(bugs.dir <- list.files(prog, 
+                "^((Open|Win)BUGS|JAGS).*")) && length(bugs.exe <- dirname(list.files(file.path(prog, 
+                bugs.dir), pattern = "((Open|Win)BUGS|jags).*\\.exe$", full.names = TRUE, 
+                recursive = TRUE)))) {
+                if (length(grep(program, bugs.dir))) {
+                  bugs.directory = bugs.exe[grep(program, bugs.exe)][length(grep(program, 
+                    bugs.exe))]
+                  ## OpenBUGS and WinBUGS can be chosen by users under Windows; ignore
+                  ## multiple directories if BUGS installed in multiple places, choose the
+                  ## latest one
+				   if (program == "JAGS") require(R2jags)
+                } else gmessage(paste(program, " is not installed. Please choose ", 
+                  bugs.dir, " for Program!"))
+            } else gmessage("OpenBUGS, WinBUGS and JAGS are not found installed.")
+        } else {
+            if (!require(R2jags)) 
+                gmessage("Please install JAGS software and R2jags package.")
+            # I'm considering making R2jags the 'Depends' of iBUGS.
         }
-        else gmessage("I'm not intelligent for Linux and Mac for the time being... \nPlease specify the 'bugs.directory' and 'program' arguments manually in the 'Preference' panel.\nI'm considering using JAGS under Linux. Would anyone help me?",
-            "Stupid iBUGS")
-        if (program == "OpenBUGS" && !require(BRugs)) {
-            galert("I need the BRugs package to call OpenBUGS",
-                "Install BRugs")
-            install.packages("BRugs")
-            library(iBUGS)
-        }
-        data = unlist(sapply(grep("^[^(package:)]", search(),
-            value = TRUE), ls))
+        # JAGS runs natively on Mac, but I haven't tested iBUGS on Mac yet.
+        # BRugs is automatically loaded with R2WinBUGS
         inits = NULL
-        parameters.to.save = ""
         model.file = "model.bug"
         n.chains = 3
         n.iter = 2000
@@ -72,25 +70,32 @@ bugs.options <- function(...) {
         codaPkg = FALSE
         working.directory = NULL
         clearWD = FALSE
-        useWINE = .Platform$OS.type != "windows"
-        WINE = NULL
-        newWINE = TRUE
-        WINEPATH = NULL
         bugs.seed = NULL
         summary.only = FALSE
         save.history = !summary.only
         over.relax = FALSE
         model.name = "bugs.model"
-        mf = list(data = data, inits = inits, parameters.to.save = parameters.to.save,
-            model.file = model.file, n.chains = n.chains, n.iter = n.iter,
-            n.burnin = n.burnin, n.thin = n.thin, n.sims = n.sims,
-            bin = bin, debug = debug, DIC = DIC, digits = digits,
-            codaPkg = codaPkg, bugs.directory = bugs.directory,
-            program = program, working.directory = working.directory,
-            clearWD = clearWD, useWINE = useWINE, WINE = WINE,
-            newWINE = newWINE, WINEPATH = WINEPATH, bugs.seed = bugs.seed,
-            summary.only = summary.only, save.history = save.history,
-            over.relax = over.relax, model.name = model.name)
+        # Arguments for JAGS only
+        n.thin.jags = max(1, floor((n.iter - n.burnin)/1000))
+        jags.seed = 123
+        refresh = n.iter/50
+        progress.bar = "text"
+        if (program != "JAGS") {
+            mf = list(data = data, inits = inits, parameters.to.save = parameters.to.save, 
+                model.file = model.file, n.chains = n.chains, n.iter = n.iter, 
+                n.burnin = n.burnin, n.thin = n.thin, n.sims = n.sims, bin = bin, 
+                debug = debug, DIC = DIC, digits = digits, codaPkg = codaPkg, 
+                bugs.directory = bugs.directory, program = program, working.directory = working.directory, 
+                clearWD = clearWD, bugs.seed = bugs.seed, summary.only = summary.only, 
+                save.history = save.history, over.relax = over.relax, model.name = model.name)
+        } else {
+            mf = list(data = data, inits = inits, parameters.to.save = parameters.to.save, 
+                model.file = model.file, n.chains = n.chains, n.iter = n.iter, 
+                n.burnin = n.burnin, n.thin = n.thin.jags, DIC = DIC, digits = digits, 
+                working.directory = working.directory, jags.seed = jags.seed, 
+                refresh = refresh, progress.bar = progress.bar, model.name = model.name)
+            # The following aren't needed by JAGS: n.sims, bin, debug, codaPkg, bugs.directory, program, clearWD, bugs.seed, summary.only, save.history, over.relax, model.name, useWINE, WINE, newWINE, WINEPATH ,bugs.seed, summary.only, save.history, over.relax, model.name
+        }
         options(iBUGS = mf)
     }
     else mf = getOption("iBUGS")
