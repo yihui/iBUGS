@@ -36,7 +36,6 @@ iBUGS <- function() {
     auto = "No"
     g = ggroup(horizontal = FALSE, container = gw0 <- gwindow("iBUGS - Intelligent (Open|Win)BUGS Interface"))
     g1 = ggroup(container = g, expand = TRUE)
-	# iBUGS is available on all operation systems now.
     if (.Platform$OS.type == "windows") {
         g7 = gframe(container = g, text = "Program")
         items = c("OpenBUGS", "WinBUGS", "JAGS")
@@ -82,8 +81,6 @@ iBUGS <- function() {
         g2 = glayout(container = ggroup(container = g), expand = TRUE,
             spacing = 2)
         # JAGS can be auto-updated until converge using R2jags::autojags;
-		# I'm considering auto-updating OpenBUGS using BRugs;
-		# WinBUGS cannot be updated since update() is unavailable for it.
 	if (bugs.options("program") == "JAGS") {
             g8 = gframe(container = g, text = "Auto-update until the model converges?")
             items.auto = c("No", "Yes")
@@ -163,7 +160,6 @@ iBUGS <- function() {
                 parameters.to.save = as.character(svalue(g.parameters.to.save)))
             dispose(gw)
         })
-		# Add Help pages for bugs()/rags() using ghelp
         gbutton("help", container = g3, handler = function(h, ...) {
             gw1 <- gwindow(paste("Help on ", ifelse(bugs.options("program") == "JAGS", "jags", 
                 "bugs")), visible = FALSE)
@@ -208,7 +204,6 @@ iBUGS <- function() {
         message(sprintf("(*) Returned values saved to the R object '%s';\n    you may play with it now, e.g. press the buttons of Print and Plot", 
             bugs.options("model.name")))
     })
-	# Add buttons of "Print" and "Plot" for the output, thus the user almost don't need to write a line in R Console;
     gbutton("Print", container = g2, handler = function(h, ...) {
         if (exists(as.character(substitute(bugs.options("model.name"))))) 
             print(get(bugs.options("model.name"))) else galert("Please execute a model first!", "Warning")
@@ -243,7 +238,6 @@ iBUGS <- function() {
                 "iBUGS.pdf", package = "iBUGS")))
     })
     invisible(NULL)
-	# Add "Cancel" button
     gbutton("cancel", container = g2, handler = function(h, ...) {
         dispose(gw0)
     })

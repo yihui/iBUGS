@@ -57,8 +57,6 @@ bugs.options <- function(...) {
             # I'm considering making R2jags the 'Depends' of iBUGS.
         }
 		}
-        # JAGS runs natively on Mac, but I haven't tested iBUGS on Mac yet.
-        # BRugs is automatically loaded with R2WinBUGS
 	 data = unlist(sapply(grep("^[^(package:)]", search(), 
             value = TRUE), ls))
         inits = NULL
@@ -93,7 +91,6 @@ bugs.options <- function(...) {
                 clearWD = clearWD, bugs.seed = bugs.seed, summary.only = summary.only, 
                 save.history = save.history, over.relax = over.relax, model.name = model.name, jags.seed = jags.seed, 
                 refresh = refresh, progress.bar = progress.bar)
-            # The following aren't needed by JAGS: n.sims, bin, debug, codaPkg, bugs.directory, program, clearWD, bugs.seed, summary.only, save.history, over.relax, model.name, useWINE, WINE, newWINE, WINEPATH ,bugs.seed, summary.only, save.history, over.relax, model.name
         options(iBUGS = mf)
     }
     else mf = getOption("iBUGS")
