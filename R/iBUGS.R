@@ -96,8 +96,10 @@ iBUGS <- function() {
         }
         ## buttons
         g3 = ggroup(container = g)
-		# change from gtable to gvarbrowser
-        g.data = gvarbrowser(container = g1, expand = TRUE)
+	g.data = gtable(data.frame(data = unlist(sapply(grep("^[^(package:)]", 
+            search(), value = TRUE), ls))), multiple = TRUE, 
+            container = g1, expand = TRUE)
+        svalue(g.data) = bugs.options("data")
         addHandlerMouseMotion(g.data, handler = function(h, ...) focus(h$obj))
         con = textConnection(svalue(txt))
         model.line = gsub("^[[:space:]]+|[[:space:]]+$", "",
@@ -157,14 +159,8 @@ iBUGS <- function() {
             }
         }
         gbutton("ok", container = g3, handler = function(h, ...) {
-            assign("parameters.to.save", as.character(svalue(g.parameters.to.save)), 
-                envir = .GlobalEnv)
-            bugs.options(parameters.to.save = as.character(svalue(g.parameters.to.save)))
-            if (length(as.character(svalue(g.data))) > 1 | as.character(svalue(g.data)) != 
-                "") {
-                assign("data", as.character(svalue(g.data)), envir = .GlobalEnv)
-                bugs.options(data = as.character(svalue(g.data)))
-            }
+	    bugs.options(data = as.character(svalue(g.data)), 
+                parameters.to.save = as.character(svalue(g.parameters.to.save)))
             dispose(gw)
         })
 		# Add Help pages for bugs()/rags() using ghelp
