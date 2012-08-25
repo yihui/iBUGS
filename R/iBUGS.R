@@ -33,8 +33,6 @@
 #' 
 iBUGS <- function() {
     options(guiToolkit = "RGtk2")
-    assign("data", "", envir = .GlobalEnv)
-    assign("parameters.to.save", "", envir = .GlobalEnv)
     auto = "No"
     g = ggroup(horizontal = FALSE, container = gw0 <- gwindow("iBUGS - Intelligent (Open|Win)BUGS Interface"))
     g1 = ggroup(container = g, expand = TRUE)
@@ -43,11 +41,11 @@ iBUGS <- function() {
         g7 = gframe(container = g, text = "Program")
         items = c("OpenBUGS", "WinBUGS", "JAGS")
         rb <- gradio(items, horizontal = TRUE, container = g7)
-        assign("program", svalue(rb), envir = .GlobalEnv)
+	bugs.options(program = svalue(rb))
         addHandlerClicked(rb, handler = function(h, ..) {
-            assign("program", svalue(h$obj), envir = .GlobalEnv)
+	bugs.options(program = svalue(h$obj))
         })
-    } else assign("program", "JAGS", envir = .GlobalEnv)
+    } else bugs.options(program = "JAGS")
     g2 = ggroup(container = g)
     txt = gtext("model\n{\n\t## likelihood\n\tfor (i in 1:N) {\n\t\t\n\t}\n\t## prior\n\n}",
         container = g1, wrap = FALSE, font.attr = c(family = "monospace",
@@ -86,7 +84,7 @@ iBUGS <- function() {
         # JAGS can be auto-updated until converge using R2jags::autojags;
 		# I'm considering auto-updating OpenBUGS using BRugs;
 		# WinBUGS cannot be updated since update() is unavailable for it.
-		if (program == "JAGS") {
+	if (bugs.options("program") == "JAGS") {
             g8 = gframe(container = g, text = "Auto-update until the model converges?")
             items.auto = c("No", "Yes")
             rb.auto <- gradio(items.auto, horizontal = TRUE, container = g8)
@@ -165,14 +163,14 @@ iBUGS <- function() {
         })
 		# Add Help pages for bugs()/rags() using ghelp
         gbutton("help", container = g3, handler = function(h, ...) {
-            gw1 <- gwindow(paste("Help on ", ifelse(program == "JAGS", "jags", 
+            gw1 <- gwindow(paste("Help on ", ifelse(bugs.options("program") == "JAGS", "jags", 
                 "bugs")), visible = FALSE)
             size(gw1) = c(500, 500)
             g4 <- ggroup(horizontal = FALSE, cont = gw1)
             g5 = ggroup(container = g4, expand = TRUE)
             helpWidget <- ghelp(cont = g5, expand = TRUE)
             visible(gw1) <- TRUE
-            add(helpWidget, ifelse(program == "JAGS", "R2jags::jags", "R2WinBUGS:::bugs"))
+            add(helpWidget, ifelse(bugs.options("program") == "JAGS", "R2jags::jags", "R2WinBUGS:::bugs"))
             g6 = ggroup(container = g4)
             gbutton("cancel", container = g6, handler = function(h, ...) {
                 dispose(gw1)
@@ -188,7 +186,7 @@ iBUGS <- function() {
         ...) {
         writeLines(svalue(txt), bugs.options("model.file"))
         assign(bugs.options("model.name"), with(bugs.options(), {
-            if (program == "JAGS") 
+            if (bugs.options("program") == "JAGS") 
                 jags(data, if (!is.null(bugs.options("inits"))) 
                   eval(parse(text = bugs.options("inits"))) else NULL, parameters.to.save, model.file, n.chains, n.iter, 
                   n.burnin, n.thin, DIC, digits, working.directory = NULL, 
@@ -201,7 +199,7 @@ iBUGS <- function() {
                 save.history, over.relax)
         }), envir = .GlobalEnv)
         # working.directory and progress.bar are fixed for jags
-        if (program == "JAGS" && auto == "Yes" && max(get(bugs.options("model.name"))$BUGSoutput$summary[, 
+        if (bugs.options("program") == "JAGS" && auto == "Yes" && max(get(bugs.options("model.name"))$BUGSoutput$summary[, 
             "Rhat"]) >= 1.1) 
             assign(bugs.options("model.name"), autojags(get(bugs.options("model.name"))), 
                 envir = .GlobalEnv)
@@ -228,8 +226,6 @@ iBUGS <- function() {
                 "  for(i in 1:Ex.N){", "    Ex.Y[i] ~ dnorm(mu,1)",
                 "  }", "  ## prior: Normal(5, 1)", "  mu ~ dnorm(5, 1)",
                 "}")
-            assign("data", c("Ex.Y", "Ex.N"), envir = .GlobalEnv)
-            assign("parameters.to.save", "mu", envir = .GlobalEnv)
             bugs.options(data = c("Ex.Y", "Ex.N"), parameters.to.save = "mu")
         }
     })

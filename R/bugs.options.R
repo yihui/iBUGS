@@ -30,9 +30,10 @@
 #' }
 #' 
 bugs.options <- function(...) {
-    program0 = ifelse(is.null(getOption("iBUGS")$program), "JAGS", getOption("iBUGS")$program)
-    if (is.null(getOption("iBUGS")) || program != program0) {
+    if (is.null(getOption("iBUGS")) || !length(grep(getOption("iBUGS")$"program", getOption("iBUGS")$"bugs.directory"))) {
         bugs.directory = ""
+        program = ifelse(is.null(getOption("iBUGS")), "", getOption("iBUGS")$"program")
+	if (!is.null(getOption("iBUGS"))){
         ## looking for (Win|Open)BUGS|JAGS
         if (.Platform$OS.type == "windows") {
             if (nzchar(prog <- Sys.getenv("ProgramFiles")) && length(bugs.dir <- list.files(prog, 
@@ -52,6 +53,7 @@ bugs.options <- function(...) {
         } else {
             if (!require(R2jags)) 
                 gmessage("Please install JAGS software and R2jags package.")
+		program = bugs.directory = "JAGS"
             # I'm considering making R2jags the 'Depends' of iBUGS.
         }
         # JAGS runs natively on Mac, but I haven't tested iBUGS on Mac yet.
