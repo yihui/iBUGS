@@ -135,6 +135,8 @@ iBUGS <- function() {
         })
         opt.names = setdiff(names(bugs.options()), c("data",
             "parameters.to.save"))
+	if (bugs.options("program") == "JAGS") opt.names = setdiff(opt.names, c("n.sims", "bin", "debug", "codaPkg", "bugs.directory", "program", "clearWD", "bugs.seed", "summary.only", "save.history", "over.relax", "model.name", "bugs.seed", "summary.only", "save.history", "over.relax", "model.name"))	
+	else opt.names = setdiff(opt.names, c("jags.seed", "refresh", "progress.bar"))
         for (i in 1:ceiling(length(opt.names)/3)) {
             for (j in 1:3) {
                 if (3 * i - (3 - j) <= length(opt.names)) {

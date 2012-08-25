@@ -56,6 +56,7 @@ bugs.options <- function(...) {
 		program = bugs.directory = "JAGS"
             # I'm considering making R2jags the 'Depends' of iBUGS.
         }
+		}
         # JAGS runs natively on Mac, but I haven't tested iBUGS on Mac yet.
         # BRugs is automatically loaded with R2WinBUGS
 	 data = unlist(sapply(grep("^[^(package:)]", search(), 
@@ -81,26 +82,18 @@ bugs.options <- function(...) {
         over.relax = FALSE
         model.name = "bugs.model"
         # Arguments for JAGS only
-        n.thin.jags = max(1, floor((n.iter - n.burnin)/1000))
         jags.seed = 123
         refresh = n.iter/50
         progress.bar = "text"
-        if (program != "JAGS") {
-            mf = list(data = data, inits = inits, parameters.to.save = parameters.to.save, 
+        mf = list(data = data, inits = inits, parameters.to.save = parameters.to.save, 
                 model.file = model.file, n.chains = n.chains, n.iter = n.iter, 
                 n.burnin = n.burnin, n.thin = n.thin, n.sims = n.sims, bin = bin, 
                 debug = debug, DIC = DIC, digits = digits, codaPkg = codaPkg, 
                 bugs.directory = bugs.directory, program = program, working.directory = working.directory, 
                 clearWD = clearWD, bugs.seed = bugs.seed, summary.only = summary.only, 
-                save.history = save.history, over.relax = over.relax, model.name = model.name)
-        } else {
-            mf = list(data = data, inits = inits, parameters.to.save = parameters.to.save, 
-                model.file = model.file, n.chains = n.chains, n.iter = n.iter, 
-                n.burnin = n.burnin, n.thin = n.thin.jags, DIC = DIC, digits = digits, 
-                working.directory = working.directory, jags.seed = jags.seed, 
-                refresh = refresh, progress.bar = progress.bar, model.name = model.name)
+                save.history = save.history, over.relax = over.relax, model.name = model.name, jags.seed = jags.seed, 
+                refresh = refresh, progress.bar = progress.bar)
             # The following aren't needed by JAGS: n.sims, bin, debug, codaPkg, bugs.directory, program, clearWD, bugs.seed, summary.only, save.history, over.relax, model.name, useWINE, WINE, newWINE, WINEPATH ,bugs.seed, summary.only, save.history, over.relax, model.name
-        }
         options(iBUGS = mf)
     }
     else mf = getOption("iBUGS")
