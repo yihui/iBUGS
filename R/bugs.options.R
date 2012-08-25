@@ -56,7 +56,10 @@ bugs.options <- function(...) {
         }
         # JAGS runs natively on Mac, but I haven't tested iBUGS on Mac yet.
         # BRugs is automatically loaded with R2WinBUGS
+	 data = unlist(sapply(grep("^[^(package:)]", search(), 
+            value = TRUE), ls))
         inits = NULL
+	 parameters.to.save = ""
         model.file = "model.bug"
         n.chains = 3
         n.iter = 2000
