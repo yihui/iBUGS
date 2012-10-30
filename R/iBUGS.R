@@ -164,9 +164,9 @@ iBUGS <- function() {
             gw1 <- gwindow(paste("Help on ", ifelse(bugs.options("program") == "JAGS", "jags", 
                 "bugs")), visible = FALSE)
             size(gw1) = c(500, 500)
-            g4 <- ggroup(horizontal = FALSE, cont = gw1)
+            g4 <- ggroup(horizontal = FALSE, container = gw1)
             g5 = ggroup(container = g4, expand = TRUE)
-            helpWidget <- ghelp(cont = g5, expand = TRUE)
+            helpWidget <- ghelp(container = g5, expand = TRUE)
             visible(gw1) <- TRUE
             add(helpWidget, ifelse(bugs.options("program") == "JAGS", "R2jags::jags", "R2WinBUGS:::bugs"))
             g6 = ggroup(container = g4)
