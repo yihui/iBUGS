@@ -3,6 +3,9 @@
 \begin_document
 \begin_header
 \textclass article
+\begin_preamble
+% \VignetteIndexEntry{An Introduction to iBUGS}
+\end_preamble
 \use_default_options true
 \begin_modules
 knitr
