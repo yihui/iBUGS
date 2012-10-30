@@ -1,7 +1,7 @@
 Package: iBUGS
 Type: Package
 Title: An Interface to R2WinBUGS by gWidgets
-Version: 0.1.1
+Version: 0.1.2
 Date: 2010-04-08
 Author: Yihui Xie and Jiebiao Wang
 Maintainer: Jiebiao Wang <randel.wang@gmail.com>
