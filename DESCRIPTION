@@ -15,6 +15,7 @@ Depends:
     R2WinBUGS,
     gWidgetsRGtk2
 Suggests:
+    R2jags,
     knitr
 Collate:
     'bugs.options.R'
