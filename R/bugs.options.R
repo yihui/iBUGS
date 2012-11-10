@@ -29,7 +29,7 @@
 #' 
 #' }
 #' 
-bugs.options <- function(...) {
+bugs.options = function(...) {
     if (is.null(getOption("iBUGS")) || !length(grep(getOption("iBUGS")$"program", getOption("iBUGS")$"bugs.directory"))) {
         bugs.directory = ""
         program = ifelse(is.null(getOption("iBUGS")), "", getOption("iBUGS")$"program")
