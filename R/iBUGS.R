@@ -31,7 +31,7 @@
 #' 
 #' }
 #' 
-iBUGS <- function() {
+iBUGS = function() {
     options(guiToolkit = "RGtk2")
     auto = "No"
     g = ggroup(horizontal = FALSE, container = gw0 <- gwindow("iBUGS - Intelligent (Open|Win)BUGS Interface"))
@@ -39,7 +39,7 @@ iBUGS <- function() {
     if (.Platform$OS.type == "windows") {
         g7 = gframe(container = g, text = "Program")
         items = c("OpenBUGS", "WinBUGS", "JAGS")
-        rb <- gradio(items, horizontal = TRUE, container = g7)
+        rb = gradio(items, horizontal = TRUE, container = g7)
 	bugs.options(program = svalue(rb))
         addHandlerClicked(rb, handler = function(h, ..) {
 	bugs.options(program = svalue(h$obj))
@@ -84,7 +84,7 @@ iBUGS <- function() {
 	if (bugs.options("program") == "JAGS") {
             g8 = gframe(container = g, text = "Auto-update until the model converges?")
             items.auto = c("No", "Yes")
-            rb.auto <- gradio(items.auto, horizontal = TRUE, container = g8)
+            rb.auto = gradio(items.auto, horizontal = TRUE, container = g8)
             addHandlerClicked(rb.auto, handler = function(h, ..) {
                 auto = svalue(h$obj)
             })
@@ -161,13 +161,13 @@ iBUGS <- function() {
             dispose(gw)
         })
         gbutton("help", container = g3, handler = function(h, ...) {
-            gw1 <- gwindow(paste("Help on ", ifelse(bugs.options("program") == "JAGS", "jags", 
+            gw1 = gwindow(paste("Help on ", ifelse(bugs.options("program") == "JAGS", "jags", 
                 "bugs")), visible = FALSE)
             size(gw1) = c(500, 500)
-            g4 <- ggroup(horizontal = FALSE, container = gw1)
+            g4 = ggroup(horizontal = FALSE, container = gw1)
             g5 = ggroup(container = g4, expand = TRUE)
-            helpWidget <- ghelp(container = g5, expand = TRUE)
-            visible(gw1) <- TRUE
+            helpWidget = ghelp(container = g5, expand = TRUE)
+            visible(gw1) = TRUE
             add(helpWidget, ifelse(bugs.options("program") == "JAGS", "R2jags::jags", "R2WinBUGS:::bugs"))
             g6 = ggroup(container = g4)
             gbutton("cancel", container = g6, handler = function(h, ...) {
