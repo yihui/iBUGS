@@ -1,6 +1,6 @@
 \name{iBUGS}
 \alias{iBUGS}
-\title{An Intelligent Interface to WinBUGS/OpenBUGS}
+\title{An Intelligent Interface to WinBUGS/OpenBUGS/JAGS}
 \usage{
 iBUGS()
 }
@@ -9,18 +9,19 @@ iBUGS()
 }
 \description{
   Create a GUI by \pkg{gWidgetsRGtk2} and all options for
-  \pkg{R2WinBUGS} can be set in the GUI. The letter
-  \sQuote{i} can be interpreted as
+  \pkg{R2WinBUGS} and \pkg{R2jags} can be set in the GUI.
+  The letter \sQuote{i} can be interpreted as
   \sQuote{\bold{i}ntelligent} or \sQuote{\bold{i}nterface}
   -- depends on what you think.
 }
 \details{
   \pkg{iBUGS} will try to find the directories of
-  WinBUGS/OpenBUGS in your system and use them when calling
-  \code{\link[R2WinBUGS]{bugs}} in \pkg{R2WinBUGS}. For
-  most Windows users, this search will succeed, unless
-  WinBUGS/OpenBUGS were not installed in the default
-  directory.
+  WinBUGS/OpenBUGS/JAGS in your system and use them when
+  calling \code{\link[R2WinBUGS]{bugs}} or
+  \code{\link[R2jags]{jags}} in \pkg{R2WinBUGS} or
+  \pkg{R2jags}. For most Windows users, this search will
+  succeed, unless WinBUGS/OpenBUGS/JAGS were not installed
+  in the default directory.
 
   \pkg{iBUGS} will also try to get the data object names
   from the current R session and guess the parameter names
@@ -42,6 +43,7 @@ iBUGS()
   Yihui Xie <\url{http://yihui.name}>
 }
 \seealso{
-  \code{\link[R2WinBUGS]{bugs}}, \code{\link{bugs.options}}
+  \code{\link[R2WinBUGS]{bugs}},
+  \code{\link[R2jags]{jags}}, \code{\link{bugs.options}}
 }
 \keyword{utilities}
