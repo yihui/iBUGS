@@ -1,6 +1,6 @@
 \name{bugs.options}
 \alias{bugs.options}
-\title{Set or Query Options to Run WinBUGS/OpenBUGS}
+\title{Set or Query Options to Run WinBUGS/OpenBUGS/JAGS}
 \usage{
 bugs.options(...)
 }
@@ -16,13 +16,16 @@ bugs.options(...)
   returned if any new options were set.
 }
 \description{
-  Set or query options in the bugs function.
+  Set or query options in the bugs/jags function.
 }
 \note{
   The only option that is not in
   \code{\link[R2WinBUGS]{bugs}} is \sQuote{model.name}
   which specifies the R object name to be used to store the
-  returned values from \code{\link[R2WinBUGS]{bugs}}.
+  returned values from \code{\link[R2WinBUGS]{bugs}}. There
+  are several options in \code{\link[R2WinBUGS]{bugs}} and
+  \code{\link[R2jags]{jags}} are omitted since they are not
+  very usefull.
 }
 \examples{
 \dontrun{
@@ -41,6 +44,6 @@ bugs.options(n.chains = 1, n.iter = 10000)
   Yihui Xie <\url{http://yihui.name}>
 }
 \seealso{
-  \code{\link[R2WinBUGS]{bugs}}
+  \code{\link[R2WinBUGS]{bugs}}, \code{\link[R2jags]{jags}}
 }
 \keyword{misc}
