@@ -1,6 +1,6 @@
-#' Set or Query Options to Run WinBUGS/OpenBUGS
+#' Set or Query Options to Run WinBUGS/OpenBUGS/JAGS
 #' 
-#' Set or query options in the bugs function.
+#' Set or query options in the bugs/jags function.
 #' 
 #' 
 #' @param \dots any options can be defined, using \sQuote{name = value} or by
@@ -10,9 +10,11 @@
 #' option list will be returned if any new options were set.
 #' @note The only option that is not in \code{\link[R2WinBUGS]{bugs}} is
 #' \sQuote{model.name} which specifies the R object name to be used to store
-#' the returned values from \code{\link[R2WinBUGS]{bugs}}.
+#' the returned values from \code{\link[R2WinBUGS]{bugs}}. There are several
+#' options in \code{\link[R2WinBUGS]{bugs}} and \code{\link[R2jags]{jags}} are
+#' omitted since they are not very usefull.
 #' @author Yihui Xie <\url{http://yihui.name}>
-#' @seealso \code{\link[R2WinBUGS]{bugs}}
+#' @seealso \code{\link[R2WinBUGS]{bugs}}, \code{\link[R2jags]{jags}}
 #' @keywords misc
 #' @export
 #' @examples
