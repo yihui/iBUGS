@@ -1,9 +1,10 @@
-%% LyX 2.0.4 created this file.  For more info, see http://www.lyx.org/.
+%% LyX 2.0.5 created this file.  For more info, see http://www.lyx.org/.
 %% Do not edit unless you really know what you are doing.
 \documentclass{article}
 \usepackage{mathpazo}
 \renewcommand{\sfdefault}{lmss}
 \renewcommand{\ttdefault}{lmtt}
+\usepackage[T1]{fontenc}
 \usepackage{geometry}
 \geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm}
 \usepackage{fancyhdr}
@@ -37,7 +38,6 @@
 
 \begin{document}
 
-
 \title{An Introduction to \textbf{iBUGS}}
 
 
@@ -54,11 +54,11 @@ program="";bugs.directory=""
 @
 
 \textbf{iBUGS} is an R package which aims to make it easier to call
-WinBUGS and OpenBUGS in R. The computation is done by \textbf{R2WinBUGS}
-\citep{R2WinBUGS} and \textbf{BRugs} \citep{BRugs}, and the GUI
-is created by \textbf{gWidgetsRGtk2} \citep{gWidgetsRGtk2}. To start
-the GUI, simply type \texttt{library(iBUGS)} in R. In case you close
-the window carelessly, you may start it again by \texttt{iBUGS()}.
+WinBUGS, OpenBUGS and JAGS in R. The computation is done by \textbf{R2WinBUGS}
+\citep{R2WinBUGS}, \textbf{BRugs} \citep{BRugs} and \textbf{R2jags}\citep{R2jags}
+, and the GUI is created by \textbf{gWidgetsRGtk2} \citep{gWidgetsRGtk2}.
+To start the GUI, simply type \emph{library(iBUGS)} in R. In case
+you close the window carelessly, you may start it again by \emph{ibugs()}.
 
 <<start-iBUGS,eval=FALSE>>=
 ## the GUI will show up once the package is loaded
@@ -187,6 +187,7 @@ bugs.directory
 
 Note if both WinBUGS and OpenBUGS are detected, \textbf{iBUGS} will
 prefer OpenBUGS, as we know the development of WinBUGS has stopped.
+The JAGS directory can also be detected similarly.
 
 
 \subsection{GUI construction}
@@ -215,24 +216,30 @@ to arrange them. You can attach an event (handler) to a widget so
 that this event will be called when users take an action to the widget.
 
 
+\subsection{Some updates}
+
+There are several updates since the first version of \textbf{iBUGS}:
+\begin{enumerate}
+\item Dynamically read the help pages and add the explanations of all arguments
+with the buttons of ``Help'', so users do not need to turn to \texttt{?bugs}
+each time they use it; buttons of ``Print'' and ``Plot'' are also
+added, thus users don't need to write any code;
+\item Add support for Linux -- with JAGS%
+\footnote{Just Another Gibbs Sampler: \url{http://www-fis.iarc.fr/~martyn/software/jags/}%
+} (R package \textbf{R2jags}); and it's intelligent enough to automatically
+judge convergence with \emph{autojags()} from package \textbf{R2jags}.
+\end{enumerate}
+
 \section{Future Work}
 
 A list of things in my mind:
 \begin{enumerate}
-\item Dynamically read the help page of \emph{bugs()} and add the explanations
-of all arguments to the widgets, so users do not need to turn to \texttt{?bugs}
-each time they use it;
-\item Add support for Linux -- possibly with JAGS%
-\footnote{Just Another Gibbs Sampler: \url{http://www-fis.iarc.fr/~martyn/software/jags/}%
-} (R packages like \textbf{rjags}, \textbf{R2jags} or \textbf{runjags});
-I know little about Mac, but I guess with proper Wine emulation specifications,
+\item I know little about Mac, but I guess with proper Wine emulation specifications,
 iBUGS can also work (but not so intelligent); I'll appreciate help
 from Mac users;
 \item I have not made up my mind yet: is it worth providing a menu for diagnostics?
 (e.g. Plot \lyxarrow{} Gelman-Rubin-Brooks) Sounds like I'm re-inventing
 the wheel...
-\item Intelligent enough to automatically judge convergence and adaptively
-select parameters?...
 \end{enumerate}
 
 \section*{Acknowledgment}
@@ -242,7 +249,6 @@ for the IT support, and Dr Alyson Wilson for introducing me to the
 Bayesian world.
 
 \bibliographystyle{jss}
-\bibliography{iBUGS}
-
+\phantomsection\addcontentsline{toc}{section}{\refname}\bibliography{iBUGS}
 
 \end{document}
