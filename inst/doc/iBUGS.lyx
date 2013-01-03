@@ -169,8 +169,8 @@ program="";bugs.directory=""
 \series bold
 iBUGS
 \series default
- is an R package which aims to make it easier to call WinBUGS and OpenBUGS
- in R.
+ is an R package which aims to make it easier to call WinBUGS, OpenBUGS
+ and JAGS in R.
  The computation is done by 
 \series bold
 R2WinBUGS
@@ -182,7 +182,7 @@ key "R2WinBUGS"
 
 \end_inset
 
- and 
+, 
 \series bold
 BRugs
 \series default
@@ -193,7 +193,18 @@ key "BRugs"
 
 \end_inset
 
-, and the GUI is created by 
+ and 
+\series bold
+R2jags
+\series default
+
+\begin_inset CommandInset citation
+LatexCommand citep
+key "R2jags"
+
+\end_inset
+
+ , and the GUI is created by 
 \series bold
 gWidgetsRGtk2
 \series default
@@ -206,14 +217,14 @@ key "gWidgetsRGtk2"
 
 .
  To start the GUI, simply type 
-\family typewriter
+\emph on
 library(iBUGS)
-\family default
+\emph default
  in R.
  In case you close the window carelessly, you may start it again by 
-\family typewriter
-iBUGS()
-\family default
+\emph on
+ibugs()
+\emph default
 .
 \end_layout
 
@@ -794,6 +805,7 @@ Note if both WinBUGS and OpenBUGS are detected,
 iBUGS
 \series default
  will prefer OpenBUGS, as we know the development of WinBUGS has stopped.
+ The JAGS directory can also be detected similarly.
 \end_layout
 
 \begin_layout Subsection
@@ -911,31 +923,55 @@ gWidgets
  called when users take an action to the widget.
 \end_layout
 
-\begin_layout Section
-Future Work
+\begin_layout Subsection
+Some updates
 \end_layout
 
 \begin_layout Standard
-A list of things in my mind:
+There are several updates since the first version of 
+\series bold
+iBUGS
+\series default
+:
 \end_layout
 
 \begin_layout Enumerate
-Dynamically read the help page of 
-\emph on
-bugs()
-\emph default
- and add the explanations of all arguments to the widgets, so users do not
- need to turn to 
+Dynamically read the help pages and add the explanations of all arguments
+ with the buttons of 
+\begin_inset Quotes eld
+\end_inset
+
+Help
+\begin_inset Quotes erd
+\end_inset
+
+, so users do not need to turn to 
 \family typewriter
 ?bugs
 \family default
- each time they use it;
+ each time they use it; buttons of 
+\begin_inset Quotes eld
+\end_inset
+
+Print
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+Plot
+\begin_inset Quotes erd
+\end_inset
+
+ are also added, thus users don't need to write any code;
 \end_layout
 
 \begin_layout Enumerate
-Add support for Linux -- possibly with JAGS
+Add support for Linux -- with JAGS
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Plain Layout
 Just Another Gibbs Sampler: 
@@ -954,20 +990,32 @@ http://www-fis.iarc.fr/~martyn/software/jags/
 
 \end_inset
 
- (R packages like 
-\series bold
-rjags
-\series default
-, 
+ (R package 
 \series bold
 R2jags
 \series default
- or 
+); and it's intelligent enough to automatically judge convergence with 
+\emph on
+autojags()
+\emph default
+ from package 
 \series bold
-runjags
+R2jags
 \series default
-); I know little about Mac, but I guess with proper Wine emulation specification
-s, iBUGS can also work (but not so intelligent); I'll appreciate help from
+.
+\end_layout
+
+\begin_layout Section
+Future Work
+\end_layout
+
+\begin_layout Standard
+A list of things in my mind:
+\end_layout
+
+\begin_layout Enumerate
+I know little about Mac, but I guess with proper Wine emulation specifications,
+ iBUGS can also work (but not so intelligent); I'll appreciate help from
  Mac users;
 \end_layout
 
@@ -976,11 +1024,6 @@ I have not made up my mind yet: is it worth providing a menu for diagnostics?
  (e.g.
  Plot \SpecialChar \menuseparator
  Gelman-Rubin-Brooks) Sounds like I'm re-inventing the wheel...
-\end_layout
-
-\begin_layout Enumerate
-Intelligent enough to automatically judge convergence and adaptively select
- parameters?...
 \end_layout
 
 \begin_layout Section*
@@ -997,7 +1040,7 @@ I'd like to thank Prof Di Cook for her support and ideas, Ted Peterson for
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
 bibfiles "iBUGS"
-options "jss"
+options "bibtotoc,jss"
 
 \end_inset
 
