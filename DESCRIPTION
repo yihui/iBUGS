@@ -1,8 +1,13 @@
 Package: iBUGS
 Type: Package
 Title: An Interface to R2WinBUGS/R2jags by gWidgets
+<<<<<<< HEAD
 Version: 0.1.3
 Date: 2013-01-02
+=======
+Version: 0.1.2
+Date: 2010-04-08
+>>>>>>> f4a069a4ab312e8eb97bfd672755580048b13d9f
 Author: Yihui Xie and Jiebiao Wang
 Maintainer: Jiebiao Wang <randel.wang@gmail.com>
 Description: This package has provided an interface to WinBUGS/OpenBUGS/JAGS
