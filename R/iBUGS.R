@@ -36,6 +36,7 @@ iBUGS = function() {
     options(guiToolkit = "RGtk2")
     auto = "No"
     g = ggroup(horizontal = FALSE, container = gw0 <- gwindow("iBUGS - Intelligent (Open|Win)BUGS Interface"))
+  fn = "bugsdata.txt"
     g1 = ggroup(container = g, expand = TRUE)
     if (.Platform$OS.type == "windows") {
         g7 = gframe(container = g, text = "Program")
@@ -184,48 +185,13 @@ iBUGS = function() {
     gbutton("Execute", container = g2, handler = function(h,
         ...) {
         writeLines(svalue(txt), bugs.options("model.file"))
-        assign(bugs.options("model.name"), with(bugs.options(), {
-            if (bugs.options("program") == "JAGS") 
-                jags(data, if (!is.null(bugs.options("inits"))) 
-                  eval(parse(text = bugs.options("inits"))) else NULL, parameters.to.save, model.file, n.chains, n.iter, 
-                  n.burnin, n.thin, DIC, digits, working.directory = NULL, 
-                  jags.seed, refresh, progress.bar = "none")
-			else bugs(data, if (!is.null(bugs.options("inits"))) 
-                eval(parse(text = bugs.options("inits"))) else NULL, parameters.to.save, model.file, n.chains, n.iter, n.burnin, 
-                n.thin, n.sims, bin, debug, DIC, digits, codaPkg, bugs.directory, 
-                program, working.directory, clearWD, useWINE = FALSE, WINE = NULL, 
-                newWINE = FALSE, WINEPATH = NULL, bugs.seed, summary.only, 
-                save.history, over.relax)
-        }), envir = .GlobalEnv)
         # working.directory and progress.bar are fixed for jags
         if (bugs.options("program") == "JAGS" && auto == "Yes" && max(get(bugs.options("model.name"))$BUGSoutput$summary[, 
             "Rhat"]) >= 1.1) 
-            assign(bugs.options("model.name"), autojags(get(bugs.options("model.name"))), 
-                envir = .GlobalEnv)
         message(sprintf("(*) Returned values saved to the R object '%s';\n    you may play with it now, e.g. press the buttons of Print and Plot", 
             bugs.options("model.name")))
     })
-    gbutton("Print", container = g2, handler = function(h, ...) {
-        if (exists(as.character(substitute(bugs.options("model.name"))))) 
-            print(get(bugs.options("model.name"))) else galert("Please execute a model first!", "Warning")
-    })
-    gbutton("Plot", container = g2, handler = function(h, ...) {
-        if (exists(as.character(substitute(bugs.options("model.name"))))) 
-            plot(get(bugs.options("model.name"))) else galert("Please execute a model first!", "Warning")
-    })
-    gbutton("Demo", container = g2, handler = function(h, ...) {
-        if (isTRUE(gconfirm("I will overwrite the current model and show the demo. Do you want to continue?"))) {
-            assign("Ex.Y", rnorm(100, mean = rnorm(1, mean = 5)),
-                envir = .GlobalEnv)
-            assign("Ex.N", 100, envir = .GlobalEnv)
-            svalue(txt) = c("## I have created two objects ",
-                "##   in your R session: Ex.Y, Ex.N", "model",
-                "{", "  ## sampling distribution: Normal(mu, 1)",
-                "  for(i in 1:Ex.N){", "    Ex.Y[i] ~ dnorm(mu,1)",
-                "  }", "  ## prior: Normal(5, 1)", "  mu ~ dnorm(5, 1)",
-                "}")
             bugs.options(data = c("Ex.Y", "Ex.N"), parameters.to.save = "mu")
-        }
     })
     gbutton("Help", container = g2, handler = function(h, ...) {
         if (isTRUE(gconfirm(paste(c(1:3, rep("*", 3)), ". ",
@@ -241,5 +207,38 @@ iBUGS = function() {
     invisible(NULL)
     gbutton("cancel", container = g2, handler = function(h, ...) {
         dispose(gw0)
+    if (file.exists("bugsdata.txt")) 
+      source(file = "bugsdata.txt")
+    out = with(bugs.options(), {
+      if (bugs.options("program") == "JAGS") 
+        jags(data, if (!is.null(bugs.options("inits"))) 
+          eval(parse(text = bugs.options("inits"))) else NULL, parameters.to.save, model.file, n.chains, n.iter, n.burnin, n.thin, DIC, digits, working.directory = NULL, jags.seed, 
+             refresh, progress.bar = "none") else bugs(data, if (!is.null(bugs.options("inits"))) 
+               eval(parse(text = bugs.options("inits"))) else NULL, parameters.to.save, model.file, n.chains, n.iter, n.burnin, n.thin, n.sims, bin, debug, DIC, digits, codaPkg, bugs.directory, 
+                                                       program, working.directory, clearWD, useWINE = FALSE, WINE = NULL, newWINE = FALSE, WINEPATH = NULL, bugs.seed, summary.only, 
+                                                       save.history, over.relax)
     })
+    # working.directory and progress.bar are fixed for jags
+    if (bugs.options("program") == "JAGS" && auto == "Yes" && max(get(bugs.options("model.name"))$BUGSoutput$summary[, "Rhat"]) >= 
+          1.1) 
+      out = autojags(out)
+    message(sprintf("(*) Returned values saved to the R object '%s';\n    you may play with it now, e.g. press the buttons of Print and Plot", 
+                    bugs.options("model.name")))
+    dput(out, bugs.options()$model.name)
+  })
+  gbutton("Print", container = g2, handler = function(h, ...) {
+    if (file.exists(bugs.options()$model.name)) 
+      print(dget(bugs.options()$model.name)) else galert("Please execute a model first!", "Warning")
+  })
+  gbutton("Plot", container = g2, handler = function(h, ...) {
+    if (file.exists(bugs.options()$model.name)) 
+      plot(dget(bugs.options()$model.name)) else galert("Please execute a model first!", "Warning")
+  })
+  gbutton("Demo", container = g2, handler = function(h, ...) {
+    if (isTRUE(gconfirm("I will overwrite the current model and show the demo. Do you want to continue?"))) {
+      Ex.Y = rnorm(100, mean = rnorm(1, mean = 5))
+      Ex.N = 100
+      dump(c("Ex.Y", "Ex.N"), file = fn)
+    }
+  })
 }
