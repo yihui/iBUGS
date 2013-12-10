@@ -1,0 +1,252 @@
+%% LyX 2.0.5 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass{article}
+\usepackage{mathpazo}
+\renewcommand{\sfdefault}{lmss}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage[authoryear]{natbib}
+\usepackage[unicode=true,
+ bookmarks=true,bookmarksnumbered=true,bookmarksopen=true,bookmarksopenlevel=2,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+ {hyperref}
+\hypersetup{pdftitle={An Introduction to iBUGS},
+ pdfauthor={Yihui Xie},
+ pdfsubject={Bayesian Statistics, R, GUI},
+ pdfkeywords={WinBUGS, OpenBUGS, R2WinBUGS, BRugs, gWidgets},
+ pdfstartview=FitH}
+\usepackage{breakurl}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\DeclareRobustCommand*{\lyxarrow}{%
+\@ifstar
+{\leavevmode\,$\triangleleft$\,\allowbreak}
+{\leavevmode\,$\triangleright$\,\allowbreak}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+% \VignetteIndexEntry{An Introduction to iBUGS}
+
+\makeatother
+
+\begin{document}
+
+\title{An Introduction to \textbf{iBUGS}}
+
+
+\author{Yihui Xie%
+\thanks{Department of Statistics, Iowa State University. Email: \protect\href{mailto:xie@yihui.name}{xie@yihui.name}
+(or \protect\href{mailto:xie@iastate.edu}{xie@iastate.edu}). Homepage:
+\protect\url{http://yihui.name}%
+} \  and Jiebiao Wang%
+\thanks{Department of Health Studies, University of Chicago. Email: \protect\href{mailto:randel.wang@gmail.com}{randel.wang@gmail.com}.%
+}}
+
+\maketitle
+<<setup,echo=FALSE>>=
+options(width=65)
+program="";bugs.directory=""
+@
+
+\textbf{iBUGS} is an R package which aims to make it easier to call
+WinBUGS%
+\footnote{\textbf{B}ayesian inference \textbf{U}sing \textbf{G}ibbs \textbf{S}ampling:
+\url{http://www.mrc-bsu.cam.ac.uk/bugs/}%
+}, OpenBUGS%
+\footnote{Open-source version of BUGS: \url{http://www.openbugs.info}%
+} and JAGS%
+\footnote{\textbf{J}ust \textbf{A}nother \textbf{G}ibbs \textbf{S}ampler: \url{http://www-fis.iarc.fr/~martyn/software/jags/}%
+} in R, under the operating systems of Windows and Linux. The computation
+is done respectively by \textbf{R2WinBUGS} \citep{R2WinBUGS}, \textbf{BRugs}
+\citep{BRugs} and \textbf{R2jags} \citep{R2jags} , and the GUI is
+created by \textbf{gWidgetsRGtk2} \citep{gWidgetsRGtk2}. To start
+the GUI, simply type \emph{library(iBUGS)} in R. In case you close
+the window carelessly, you may start it again by \emph{iBUGS()}.
+
+<<start-iBUGS,eval=FALSE>>=
+## the GUI will show up once the package is loaded
+library(iBUGS)
+## or call iBUGS() to generate another GUI
+iBUGS()
+@
+
+
+\section{Motivation}
+
+We were thinking about writing this package when we saw the default
+value for the argument \texttt{bugs.directory} was ``\texttt{c:/Program
+Files/WinBUGS14/}'' in the main function \emph{bugs()} of \textbf{R2WinBUGS},
+as we believed it is not a too difficult task to use R to find the
+installation directories of WinBUGS and OpenBUGS for most Windows
+users. We tried the Windows registry approach%
+\footnote{\url{http://yihui.name/en/2010/03/looking-for-software-paths-in-windows-registry/}%
+} but found it was not general enough, so we switched to another ``brute-force''
+way: searching for WinBUGS and OpenBUGS in the directory defined by
+the environment variable ``\texttt{ProgramFiles}''. Most Windows
+users will install programs in this directory, so we no longer need
+to manually specify ``\texttt{bugs.directory = c:/Program Files/WinBUGS14/}''.
+
+Based on this trivial motivation, we think we can also make other
+arguments easier to specify, and generalize this to JAGS and Linux.
+For instance, we can analyze the BUGS model code and guess the parameter
+names using regular expressions; then put them in a list and select
+the ones we are interested in. In this case, we do not need to type
+the names of parameters one by one, which will otherwise be tedious
+in R or WinBUGS/OpenBUGS. When we were new to WinBUGS, we often forgot
+to specify the parameters (node) to monitor in the ``\textsf{Sampler
+Monitor Tool}'' panel, and the consequence was we got nothing after
+a long long waiting and began to regret clicking the ``Update''
+menu too fast.
+
+
+\section{The GUI}
+
+\begin{figure}
+\begin{centering}
+\includegraphics[width=4.1in]{figure/main-interface}
+\par\end{centering}
+
+\caption{The main interface of \textbf{iBUGS}\label{fig:main-interface}}
+\end{figure}
+
+
+The main interface of \textbf{iBUGS} looks quite simple as shown in
+Figure \ref{fig:main-interface}. The text box is the place to write
+the model; it comes with a default sketch of the model. The button
+``Open'' and ``Save'' can be used to open and save a BUGS model
+respectively. There will be a tooltip hanging around the text box
+and showing the path of the current file when you move the mouse over
+it (the tooltip will be empty if you did not open a model and have
+not saved the current one). 
+
+\begin{figure}
+\begin{centering}
+\includegraphics[width=6in]{figure/preference}
+\par\end{centering}
+
+\caption{The preference panel\label{fig:preference}}
+\end{figure}
+
+
+When you finished writing the model, you need to make sure the data
+objects you mentioned in the model are already in the current R session.
+Then open the ``Preferences'' panel (Figure \ref{fig:preference}):
+all the arguments for the function \emph{bugs()} are listed there.
+If you are familiar with the function \emph{bugs()}, we will not need
+to explain anything here. The \texttt{data} list is read from R's
+workspace; note it even includes the names from the objects that are
+\emph{attach()}ed to the R session. For example, the code below can
+make the two objects \texttt{x} and \texttt{y} in \texttt{dat} visible
+to \textbf{iBUGS}:
+
+<<attach-ex,eval=FALSE>>=
+dat = list(x=1:3,y=rnorm(5))
+## personally we don't recommend attaching R objects that is a bad habit
+attach(dat)
+@
+
+The parameter names, as introduced before, can be found out automatically
+from the BUGS model. Other options are from the parameters of the
+\emph{bugs()} function. Note that in the preference panel, there is
+an additional option ``\texttt{model.name}'' (default to be ``\texttt{bugs.model}'');
+the results will be saved to a file with this name in the working
+directory, so that you can do further analysis with this object by
+\emph{dget(bugs.options()\$model.name)}. The choice of ``auto-update''
+makes \textbf{iBUGS} intelligent enough to automatically judge convergence
+with \emph{autojags()} from package \textbf{R2jags}. The ``Help''
+button in the preference panel can read the help pages of \emph{bugs()}
+or \emph{jags()} correspondingly, so you do not need to turn to \emph{?bugs}
+or \emph{?jags} each time they use it.
+
+After clicking ``OK'' button, you can click ``Execute'' on the
+main interface to run the model. There is also a simple demo and you
+can test if \textbf{iBUGS} works for you. The buttons of ``Print''
+and ``Plot'' are used to demonstrate the results, thus you almost
+do not need to write any code.
+
+
+\section{Technical Details}
+
+
+\subsection{WinBUGS / OpenBUGS directory}
+
+Most Windows system comes with an environment variable ``\texttt{ProgramFiles}'',
+which records the default directory to install new software packages.
+We can search in this directory for WinBUGS or OpenBUGS. Using file
+manipulation functions such as \emph{list.files()} as well as regular
+expressions, we can test if any BUGS package has been installed; e.g.
+
+<<bugs-directory,eval=FALSE>>=
+if (nzchar(prog <- Sys.getenv("ProgramFiles")) && 
+    length(bugs.dir <- list.files(prog, "^(Open|Win)BUGS.*")) && 
+    length(bugs.exe <- dirname(list.files(file.path(prog, bugs.dir), 
+        pattern = "(Open|Win)BUGS.*\\.exe$", full.names = TRUE, 
+        recursive = TRUE)))) {
+    ## if we can find OpenBUGS, use it prior to WinBUGS
+    program = ifelse(length(grep("OpenBUGS", bugs.exe)), "OpenBUGS", 
+        "WinBUGS")
+    ## ignore multiple directories if (several versions of) BUGS installed in multiple places
+    bugs.directory = bugs.exe[grep(program, bugs.exe)][1]
+}
+@
+
+Note if both WinBUGS and OpenBUGS are detected, \textbf{iBUGS} will
+prefer OpenBUGS, as we know the development of WinBUGS has stopped.
+The JAGS directory can also be detected in the same way.
+
+
+\subsection{GUI construction}
+
+Building a GUI in R with the \textbf{gWidgets} \citep{gWidgets} package
+is quite easy and even dynamic. That means you can generate GUI components
+dynamically whenever you need them. The \textbf{gWidgets} package
+comes with 4 types of interface, namely GTK+ (\textbf{gWidgetsRGtk2}),
+tcltk (\textbf{gWidgetstcltk}), Java (\textbf{gWidgetsrJava}) and
+WWW (\textbf{gWidgetsWWW}). You do not need to deal with these four
+specific packages -- just play with \textbf{gWidgets} and specify
+your GUI type. Personally we like the GTK+ interface most, so we made
+it the default one for \textbf{iBUGS}. Here is a short demo:
+
+<<gui-demo,eval=FALSE>>=
+library(gWidgets)
+options(guiToolkit = "RGtk2")
+## create a window and add a button to it
+gw=gwindow('GUI Demo')
+gb=gbutton('Click me!', container=gw, handler=function(h,...){svalue(h$obj)=paste(svalue(h$obj),'haha!')})
+@
+
+In \textbf{gWidgets}, there are several widgets available (text boxes,
+buttons, drop-down list, ...), and you just need to think about how
+to arrange them. You can attach an event (handler) to a widget so
+that this event will be called when users take an action to the widget.
+
+
+\section{Future Work}
+
+There is a list of things in our mind:
+\begin{enumerate}
+\item We know little about Mac, but we guess with proper Wine emulation
+specifications, \textbf{iBUGS} can also work (but not so intelligent);
+we will appreciate help from Mac users;
+\item We have not made up my mind yet: is it worth providing a menu for
+diagnostics? (e.g. Plot \lyxarrow{} Gelman-Rubin-Brooks.) Sounds
+like we are re-inventing the wheel.
+\end{enumerate}
+
+\section*{Acknowledgment}
+
+Yihui would like to thank Prof Di Cook for her support and ideas,
+Ted Peterson for the IT support, and Dr Alyson Wilson for introducing
+him to the Bayesian world.
+
+\bibliographystyle{jss}
+\bibliography{iBUGS}
+
+\end{document}
