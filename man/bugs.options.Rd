@@ -10,22 +10,22 @@ bugs.options(...)
   values. See the examples below.}
 }
 \value{
-  A list containing all the options when the query
-  parameter was empty; or the option value when a single
-  parameter was queried. The old option list will be
-  returned if any new options were set.
+A list containing all the options when the query parameter
+was empty; or the option value when a single parameter was
+queried. The old option list will be returned if any new
+options were set.
 }
 \description{
-  Set or query options in the bugs/jags function.
+Set or query options in the bugs/jags function.
 }
 \note{
-  The only option that is not in
-  \code{\link[R2WinBUGS]{bugs}} is \sQuote{model.name}
-  which specifies the R object name to be used to store the
-  returned values from \code{\link[R2WinBUGS]{bugs}}. There
-  are several options in \code{\link[R2WinBUGS]{bugs}} and
-  \code{\link[R2jags]{jags}} are omitted since they are not
-  very usefull.
+The only option that is not in
+\code{\link[R2WinBUGS]{bugs}} is \sQuote{model.name} which
+specifies the R object name to be used to store the
+returned values from \code{\link[R2WinBUGS]{bugs}}. There
+are several options in \code{\link[R2WinBUGS]{bugs}} and
+\code{\link[R2jags]{jags}} are omitted since they are not
+very usefull.
 }
 \examples{
 \dontrun{
@@ -41,9 +41,9 @@ bugs.options(n.chains = 1, n.iter = 10000)
 }
 }
 \author{
-  Yihui Xie <\url{http://yihui.name}>
+Yihui Xie <\url{http://yihui.name}>
 }
 \seealso{
-  \code{\link[R2WinBUGS]{bugs}}, \code{\link[R2jags]{jags}}
+\code{\link[R2WinBUGS]{bugs}}, \code{\link[R2jags]{jags}}
 }
 \keyword{misc}
