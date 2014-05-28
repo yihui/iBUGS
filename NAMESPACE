@@ -1,2 +1,4 @@
 export(bugs.options)
 export(iBUGS)
+import(R2WinBUGS)
+import(gWidgetsRGtk2)
